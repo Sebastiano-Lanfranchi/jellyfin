@@ -88,7 +88,10 @@ public class RemoteImageController : BaseJellyfinApiController
                 CancellationToken.None)
             .ConfigureAwait(false);
 
-        var imageArray = images.ToArray();
+        var imageArray = images
+            .OrderByDescending(i => i.CommunityRating ?? 0)
+            .ThenByDescending(i => i.VoteCount ?? 0)
+            .ToArray();
         var allProviders = _providerManager.GetRemoteImageProviderInfo(item);
         if (type.HasValue)
         {
